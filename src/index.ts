@@ -1,5 +1,5 @@
 import express = require('express')
-import bodyparser = require('body-parser')
+//import bodyparser = require('body-parser')
 import { MetricsHandler } from './metrics'
 
 const app = express()
@@ -7,8 +7,8 @@ const port: string = process.env.PORT || '8080'
 
 import path = require('path')
 app.use(express.static(path.join(__dirname, '../public')))
-app.use(bodyparser.json())
-app.use(bodyparser.urlencoded())
+//app.use(bodyparser.json())
+//app.use(bodyparser.urlencoded())
 
 app.set('views', __dirname + "/view")
 app.set('view engine', 'ejs');
@@ -66,14 +66,3 @@ app.listen(port, (err: Error) => {
   }
   console.log(`server is listening on port ${port}`)
 })
-
-/*
-app.get('/metrics.json', (req: any, res: any) => {
-  MetricsHandler.get((err: Error | null, result?: any) => {
-    if (err) {
-      throw err
-    }
-    res.json(result)
-  })
-})
-*/
