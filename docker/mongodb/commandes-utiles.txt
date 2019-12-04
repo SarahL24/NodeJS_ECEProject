@@ -1,0 +1,15 @@
+
+
+docker-compose up
+
+// Commande Mongo Shell
+docker exec -it eceproject-mongo mongo
+
+// Save
+docker exec eceproject-mongo sh -c 'mongodump --archive' > db.dump
+
+// Restore
+docker exec -i eceproject-mongo sh -c 'mongorestore --archive' < db.dump
+
+// Create container for node app
+docker image build -t node-project .
