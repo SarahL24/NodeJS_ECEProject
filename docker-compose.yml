@@ -17,7 +17,7 @@ services:
         container_name: eceproject-web
         build: .
         ports:
-            - "8080:8080"
+            - '8080:8080'
         volumes:
             - .:/code
         depends_on: 
