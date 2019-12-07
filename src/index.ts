@@ -1,12 +1,53 @@
-import express = require('express')
+import express = require('express');
+import mongoose = require('mongoose');
+
 import { MetricsHandler } from './metrics'
 
-const app = express();
-var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://mongo:27017', {
-  useMongoClient: true
-}); // connect to our database
+const app = express();
+
+//======================= Mongo Config ====================//
+
+const options = {
+  autoIndex: false, // Don't build indexes
+  reconnectTries: 30, // Retry up to 30 times
+  reconnectInterval: 500, // Reconnect every 500ms
+  poolSize: 10, // Maintain up to 10 socket connections
+  // If not connected, return errors immediately rather than waiting for reconnect
+  bufferMaxEntries: 0
+}
+
+const connectWithRetry = () => {
+console.log('MongoDB connection with retry')
+mongoose.connect("mongodb://localhost:27017/company", options).then(()=>{
+  console.log('MongoDB is connected')
+}).catch(err => {
+  console.log('MongoDB connection unsuccessful, retry after 5 seconds.')
+  setTimeout(connectWithRetry, 5000)
+})
+}
+
+connectWithRetry()
+
+var connection = mongoose.connection;
+
+//======================= End of Mongo Config ====================//
+
+//======================= Mongo Tests ============================//
+connection.on('error', console.error.bind(console, 'connection error:'));
+connection.once('open', function () {
+
+    connection.db.collection("employees", function(err: Error, collection: any){
+        collection.find({}).toArray(function(err: Error, data: any){
+            console.log("here is the data : ");
+            console.log(data); // it will print your collection data
+        })
+    });
+});
+
+//======================= End of Mongo Tests =======================//
+
 
 const port: string = process.env.PORT || '8080'
 

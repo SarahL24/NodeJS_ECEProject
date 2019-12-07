@@ -1,6 +1,8 @@
 
 
-docker-compose up
+docker-compose up --build
+OR
+docker-compose up --build -d eceproject-mongo 
 
 // Commande Mongo Shell
 docker exec -it eceproject-mongo mongo

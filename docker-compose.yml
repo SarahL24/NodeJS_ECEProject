@@ -1,24 +1,19 @@
-version: '3'
-
+version: "2"
 services:
-
-    mongodb:
-        image: mongo:latest
-        container_name: eceproject-mongo
-        restart: always
-        environment:
-            MONGO_INITDB_DATABASE: company
-        ports:
-            - 27017:27017
-        volumes:
-            - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-
-    web:
-        container_name: eceproject-web
-        build: .
-        ports:
-            - '8080:8080'
-        volumes:
-            - .:/code
-        depends_on: 
-            - mongodb
+  web:
+    container_name: eceproject-web
+    build: .
+    ports:
+    - "8080:8080"
+    depends_on:
+    - mongo
+  mongo:
+    container_name: eceproject-mongo
+    image: mongo
+    ports:
+    - "27017:27017"
+    volumes:
+    - data-volume:/data/db
+    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+volumes:
+    data-volume:
