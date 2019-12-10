@@ -27,6 +27,7 @@
     "level-ws": "^2.0.0",
     "leveldown": "^5.4.1",
     "levelup": "^4.3.2",
+    "mongoose": "^5.8.0",
     "mysql": "^2.17.1"
   }
 }
