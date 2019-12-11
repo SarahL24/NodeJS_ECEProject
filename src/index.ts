@@ -1,7 +1,9 @@
 import express = require('express');
+import url = require('url');
 import { MetricsHandler } from './metrics';
 import {MongoDB} from './mongodb';
-import {User} from './users';
+import {User, UsersHandler} from './users';
+import jwt = require('jsonwebtoken');
 
 
 const mongoDB = new MongoDB();
@@ -22,6 +24,24 @@ app.get('/', (req: any, res: any) => {
   res.render('credentials.ejs')
 })
 
+app.get('/home/:token', (req: any, res: any) => {
+
+  const token = req.params.token;
+  //console.log('My super token !', token)
+  //if no token found, return response
+  if (!token) return res.status(401).send("Access denied. No token provided.");
+
+  try {
+    const decoded = jwt.verify(token, 'eceprojectkey');
+    var myUser = decoded.user;
+    //console.log('myUser :', myUser);
+    res.render('home.ejs', {email: myUser.email, password: myUser.password})
+  } catch (ex) {
+    //if invalid token
+    res.status(400).send("Invalid token.");
+  }
+})
+
 /*
 app.get(
     '/hello/:name', 
@@ -31,6 +51,7 @@ app.get(
 */
 
 const dbMet: MetricsHandler = new MetricsHandler('./db/metrics')
+const dbUsr: UsersHandler = new UsersHandler()
 
 app.post('/metrics/:id', (req: any, res: any) => {
   dbMet.save(req.params.id, req.body, (err: Error | null) => {
@@ -39,37 +60,46 @@ app.post('/metrics/:id', (req: any, res: any) => {
   })
 })
 
-/*
-app.post('/user', (req: any, res: any) => {
-  const myUser = new User();
-  myUser.testSave();
-  res.status(200).send('user added');
-})
-*/
 
 app.post('/user/signup', (req: any, res: any) => {
-  const myUser = new User(req.body.email, req.body.password);
-  myUser.save();
-  res.redirect('/');
+  const userToSave = new User(req.body.email, req.body.password);
+  dbUsr.save(userToSave, (err:Error, result:any) => {
+    if(err) {
+      console.log(err)
+    }
+    if(result === null){
+      console.log("Unable to save user");
+      res.redirect('/');
+    } 
+    else {
+      var myUser = new User(result.userToSave.email, result.userToSave.password);
+      console.log(myUser, "as been saved");
+
+      const token = result.token;
+      res.redirect(`/home/${token}`)
+    }
+  });
 })
 
 app.post('/user/login', (req: any, res: any) => {
   
-  var userToFind = new User(req.body.email, req.body.password);
-  userToFind.find((err: Error, result:any) =>{
+  var userToLog = new User(req.body.email, req.body.password);
+  dbUsr.login(userToLog, (err: Error, result:any) => {
     if(err) {
       console.log(err)
     }
     if(result === null){
       console.log("Unable to find user");
+      res.redirect('/');
     } 
     else {
-      var myUser = new User(result.email, result.password);
-      console.log(myUser);
+      var myUser = new User(result.userToLog.email, result.userToLog.password);
+      console.log(myUser, 'as been logged in');
+
+      const token = result.token;
+      res.redirect(`/home/${token}`)
     }
   });
-
-  res.redirect('/');
 })
 
 

@@ -9,4 +9,5 @@ export class UserMongo{
     
     // Model for user
     public userModel = mongoose.model('user', this.userSchema);
+    
 }

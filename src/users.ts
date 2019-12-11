@@ -1,7 +1,11 @@
 import {UserMongo} from '../mongoose/user';
+import jwt = require('jsonwebtoken');
+
 
 var userMongo = new UserMongo();
 var userModel = userMongo.userModel;
+var query = userModel.find();
+query.collection(userModel.collection);
 
 export class User {
 
@@ -12,24 +16,44 @@ export class User {
       this.email = email;
       this.password = password;
     }
-    
+}
+
+export class UsersHandler{
+
     // Saving
-    public save = () => {
-        var myUser = new userModel({ 
-            email : this.email,
-            password: this.password,
-        })
-        myUser.save(function (err: Error) {
-            if (err) { throw err; }
-            console.log('User', myUser.email,', with password', myUser.password ,'successfully added');
-        });
+    public save = (userToSave: User, callback: any) => {
+
+        var toSave = true;
+
+        query.find().exec(function(err: Error, users: any){
+            if(err)
+               return console.log(err);
+            users.forEach(function(user: any){
+               if(userToSave.email === user.email){
+                    console.log('User already exists');
+                    toSave = false;
+                    callback(null, null);
+               }
+            });
+
+            if(toSave === true){
+                var myUserModel = new userModel(userToSave);
+                const token = jwt.sign({ user: userToSave }, 'eceprojectkey');
+                console.log(token);
+
+                myUserModel.save(function (err: Error) {
+                    if (err) { throw err; }
+                });
+                callback(null, {userToSave, token})
+            }
+         });
     }
 
     // Finding the user for logging in
-    public find = (callback: any) => {
+    public login = (userToLog: User, callback: any) => {
 
-        var email = this.email
-        var password = this.password
+        var email = userToLog.email
+        var password = userToLog.password
 
         var findUser = function(callback: any){
             userModel.findOne({
@@ -45,11 +69,13 @@ export class User {
         }
 
         findUser((err: Error, result: any) => {
-            var myUserObj = result;
-            if (myUserObj !== null){
-                var myUser = new User(myUserObj.email, myUserObj.password)
-                callback(null, myUser)
+            var myUser = result;
+            if (myUser !== null){
+                var userToLog = new User(myUser.email, myUser.password);
+                const token = jwt.sign({ user: userToLog }, 'eceprojectkey');
+                callback(null, {userToLog, token})
             } else {
+                console.log("Wrong email or password")
                 callback(null, null)
             }
         })
