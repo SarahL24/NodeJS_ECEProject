@@ -1,29 +1,32 @@
 import express = require('express');
-import { MetricsHandler } from './metrics';
-import {MongoDB} from './mongodb';
+import {MongoDB} from '../mongoose/mongodb';
 import {User, UsersHandler} from './users';
+//import {Metric, MetricsHandler} from './metrics';
 import jwt = require('jsonwebtoken');
-
+import path = require('path');
 
 const mongoDB = new MongoDB();
-
 mongoDB.connect();
 
 const app = express()
 const port: string = process.env.PORT || '8080'
 
-const dbMet: MetricsHandler = new MetricsHandler('./db/metrics')
 const dbUsr: UsersHandler = new UsersHandler()
 
-import path = require('path')
+
 app.use(express.static(path.join(__dirname, '../public')))
 app.use(express.urlencoded())
+app.use(express.json())
 
 app.set('views', __dirname + "/view")
 app.set('view engine', 'ejs');
 
 app.get('/', (req: any, res: any) => {
   res.render('credentials.ejs')
+})
+
+app.get('/home', (req: any, res: any) => {
+  res.redirect('/')
 })
 
 
@@ -130,7 +133,6 @@ app.post('/user/delete/:token', (req: any, res: any) => {
   }
 })
 
-
 app.post('/user/update/:token', (req: any, res: any) => {
   const token = req.params.token;
   if (!token) return res.status(401).send("Access denied. No token provided.");
@@ -171,14 +173,6 @@ app.post('/user/update/:token', (req: any, res: any) => {
     console.log("Invalid token.");
     res.status(400).send("Invalid token.");
   }
-})
-
-
-app.get('/metrics/', (req:any, res:any) => {
-  dbMet.getAll( (err: Error | null, result:any) => {
-    if (err) throw err
-    res.status(201).json(result)
-  })
 })
 
 
