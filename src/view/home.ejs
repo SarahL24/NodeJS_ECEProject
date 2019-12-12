@@ -8,10 +8,37 @@
     <body class="container" style="padding-top: 15px;">
         <div>
             <h1>Welcome to the Home page :</h1>
-            <p> Your informations :</p> <br>
-            <%= email %>
-            <%= password %>
-            <p class="text-success"><strong>Enjoy !</strong> </p>
+            <p> Your informations :</p>
+            <h2> <%= email %> </h2>
+            <h2> <%= password %> </h2>
+            <form name="logout" method="GET" action= "/">
+                <input class="text-danger" type="submit" value="Log Me Out !" ></td>
+            </form>
+
+            <div class="col-lg-6 col-md-offset-3">
+                <div class="jumbotron">    
+                    <h1> Delete your Account </h1>         
+                    <form name="delete" method="post" action= "<%= '/user/delete/' +  token %>">
+                        <input class="text-danger" type="submit" value="Delete this Account" ></td>
+                    </form>
+                    <h1> Update your informations </h1>
+                <form name="update" method="post" action= "<%= '/user/update/' +  token %>">
+                    <table>
+                        <tr>
+                        <td>New Email</td>
+                        <td><input type="text" name="newEmail" ></td>
+                        </tr>
+                        <tr>
+                        <td>New Password</td>
+                        <td><input type="text" name="newPassword"></td>
+                        </tr>
+                        <tr>
+                        <td colspan="2"><input class = "text-success" type="submit" value="Update" ></td>
+                        </tr>
+                    </table>
+                </form>
+                </div>  
+            </div>
             
         </div>
     </body>

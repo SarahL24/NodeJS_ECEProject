@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 export class UserMongo{
-// Schema for user
+    // Schema for user
     public userSchema = new mongoose.Schema({
         email :  String,
         password : String,
@@ -9,5 +9,4 @@ export class UserMongo{
     
     // Model for user
     public userModel = mongoose.model('user', this.userSchema);
-    
 }

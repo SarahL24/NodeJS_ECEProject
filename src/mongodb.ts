@@ -14,26 +14,20 @@ export class MongoDB{
         useUnifiedTopology: true,
     }
 
-    public connectWithRetry = () => {
-        console.log('MongoDB connection to localhost...')
+    public connect = () => {
+        console.log('Connection to MongoDB...')
         mongoose.connect("mongodb://localhost:27017/nodeProject", this.options).then(()=>{
             console.log('MongoDB is connected to localhost')
         }).catch(err => {
-            console.log('Unable to connect to localhost, trying to connect to mongo container')
-            this.connectWithRetryContainer
-            //console.log('MongoDB connection unsuccessful, retry after 5 seconds.')
+            console.log('Unable to connect to local MongoDB, trying to reach mongo container')
             //setTimeout(connectWithRetry, 5000)
-    })
-    }
-
-    public connectWithRetryContainer = () => {
-        console.log('MongoDB connection to mongo container...')
+    }) ||
         mongoose.connect("mongodb://mongo:27017/nodeProject", this.options).then(()=>{
-            console.log('MongoDB is connected to mongo container')
-        }).catch(err => {
-            console.log('MongoDB connection unsuccessful')
-            //setTimeout(connectWithRetryContainer, 5000)
-        })
+        console.log('MongoDB is connected to mongo container')
+    }).catch(err => {
+        console.log('Unable to connect to the container MongoDB, trying to reach local mongo')
+        //setTimeout(connectWithRetryContainer, 5000)
+    })
     }
 
 }
