@@ -1,7 +1,7 @@
 import express = require('express');
 import {MongoDB} from '../mongoose/mongodb';
 import {User, UsersHandler} from './users';
-//import {Metric, MetricsHandler} from './metrics';
+import {Metric, MetricsHandler} from './metrics';
 import jwt = require('jsonwebtoken');
 import path = require('path');
 
@@ -9,10 +9,12 @@ const mongoDB = new MongoDB();
 mongoDB.connect();
 
 const app = express()
+const auth = require('./auth');
+
 const port: string = process.env.PORT || '8080'
 
 const dbUsr: UsersHandler = new UsersHandler()
-
+const dbMet: MetricsHandler = new MetricsHandler()
 
 app.use(express.static(path.join(__dirname, '../public')))
 app.use(express.urlencoded())
@@ -30,36 +32,28 @@ app.get('/home', (req: any, res: any) => {
 })
 
 
-app.get('/home/:token', (req: any, res: any) => {
+app.get('/home/:token', auth, async (req: any, res: any) => {
 
   const token = req.params.token;
-  if (!token) return res.status(401).send("Access denied. No token provided.");
+  var userID = req.userID;
 
-  try {
-    const decoded = jwt.verify(token, 'eceprojectkey');
-    var userID = decoded.userID;
-
-    dbUsr.find(userID, (err: Error, result: User) => {
-      if(err) {
-        console.log(err)
-      }
-      if(result === null){
-        console.log("Unable to find user, token may be invalid");
-        res.status(400).send("Unable to find user, token may be invalid");
-      } 
-      else {
-        var myUser = result
-        res.render('home.ejs', {email: myUser.email, password: myUser.password, token: token})
-      }
-    })
-  } catch (ex) {
-    console.log("Invalid token.");
-    res.status(400).send("Invalid token.");
-  }
+  dbUsr.find(userID, (err: Error, result: User) => {
+    if(err) {
+      console.log(err)
+    }
+    if(result === null){
+      console.log("Unable to find user, token may be invalid");
+      res.status(400).send("Unable to find user, token may be invalid");
+    } 
+    else {
+      var myUser = result
+      res.render('home.ejs', {user: myUser, token: req.params.token})
+    }
+  })
 })
 
 app.post('/user/signup', (req: any, res: any) => {
-  const userToSave = new User(req.body.email, req.body.password);
+  const userToSave = new User(req.body.email, req.body.password, []);
   dbUsr.signup(userToSave, (err:Error, result:any) => {
     if(err) {
       console.log(err)
@@ -78,7 +72,7 @@ app.post('/user/signup', (req: any, res: any) => {
 
 app.post('/user/login', (req: any, res: any) => {
   
-  var userToLog = new User(req.body.email, req.body.password);
+  var userToLog = new User(req.body.email, req.body.password, []);
   dbUsr.login(userToLog, (err: Error, result:any) => {
     if(err) {
       console.log(err)
@@ -94,85 +88,142 @@ app.post('/user/login', (req: any, res: any) => {
   });
 })
 
-app.post('/user/delete/:token', (req: any, res: any) => {
-  const token = req.params.token;
-  if (!token) return res.status(401).send("Access denied. No token provided.");
+app.post('/user/delete/:token', auth, (req: any, res: any) => {
+  
+  const token = req.params.token;  
+  var userID = req.userID;
 
-  try {
-    const decoded = jwt.verify(token, 'eceprojectkey');
-    var userID = decoded.userID;
-
-    dbUsr.find(userID, (err: Error, result: any) => {
-      if(err) {
-        console.log(err)
-      }
-      if(result === null){
-        console.log("Unable to find user, token may be invalid");
-        res.status(400).send("Unable to find user, token may be invalid");
-      } 
-      else {
-        var userToDelete = result
-        dbUsr.delete(userToDelete, (err: Error, result:any) => {
-          if(err) {
-            console.log(err)
-          }
-          if(result === null){
-            console.log("Unable to delete user");
-            res.redirect('/');
-          } 
-          else {
-            console.log("User successfully deleted");
-            res.redirect('/')
-          }
-        });
-      }
-    })
-  } catch (ex) {
-    console.log("Invalid token.");
-    res.status(400).send("Invalid token.");
-  }
+  dbUsr.find(userID, (err: Error, result: any) => {
+    if(err) {
+      console.log(err)
+    }
+    if(result === null){
+      console.log("Unable to find user, token may be invalid");
+      res.status(400).send("Unable to find user, token may be invalid");
+    } 
+    else {
+      var userToDelete = result
+      dbUsr.delete(userToDelete, (err: Error, result:any) => {
+        if(err) {
+          console.log(err)
+        }
+        if(result === null){
+          console.log("Unable to delete user");
+          res.redirect(`/home/${token}`)
+        } 
+        else {
+          console.log("User successfully deleted");
+          res.redirect('/')
+        }
+      });
+    }
+  })
 })
 
-app.post('/user/update/:token', (req: any, res: any) => {
+app.post('/user/update/:token', auth, (req: any, res: any) => {
+  
   const token = req.params.token;
-  if (!token) return res.status(401).send("Access denied. No token provided.");
+  var userID = req.userID;
 
-  try {
-    const decoded = jwt.verify(token, 'eceprojectkey');
-    var userID = decoded.userID;
+  dbUsr.find(userID, (err: Error, result: User) => {
+    if(err) {
+      console.log(err)
+    }
+    if(result === null){
+      console.log("Unable to find user, token may be invalid");
+      res.status(400).send("Unable to find user, token may be invalid");
+    } 
+    else {
+      var userToUpdate = result
+      var userUpdated = new User(req.body.newEmail, req.body.newPassword, [])
 
-    dbUsr.find(userID, (err: Error, result: User) => {
-      if(err) {
-        console.log(err)
-      }
-      if(result === null){
-        console.log("Unable to find user, token may be invalid");
-        res.status(400).send("Unable to find user, token may be invalid");
-      } 
-      else {
-        var userToUpdate = result
-        var userUpdated = new User(req.body.newEmail, req.body.newPassword)
+      dbUsr.update(userToUpdate, userUpdated, (err: Error, result: User) => {
+        if(err) {
+          console.log(err)
+        }
+        if(result === null){
+          console.log("Unable to update user");
+          res.redirect(`/home/${token}`)
+        } 
+        else {
+          var myUser = result
+          console.log("User successfully updated");
+          res.redirect(`/home/${token}`)       
+        }
+      });
+    }
+  })
+})
 
-        dbUsr.update(userToUpdate, userUpdated, (err: Error, result: User) => {
-          if(err) {
-            console.log(err)
-          }
-          if(result === null){
-            console.log("Unable to update user");
-            res.render('home.ejs', {email: userToUpdate.email, password: userToUpdate.password, token: token})
-          } 
-          else {
-            var myUser = result
-            console.log("User successfully updated");
-            res.render('home.ejs', {email: myUser.email, password: myUser.password, token: token})
-          }
-        });
-      }
-    })
-  } catch (ex) {
-    console.log("Invalid token.");
-    res.status(400).send("Invalid token.");
-  }
+app.post('/metrics/add/:token', auth, (req: any, res: any) => {
+
+  const token = req.params.token;
+  var userID = req.userID;
+
+  dbUsr.find(userID, (err: Error, result: User) => {
+    if(err) {
+      console.log(err)
+    }
+    if(result === null){
+      console.log("Unable to find user, token may be invalid");
+      res.status(400).send("Unable to find user, token may be invalid");
+    } 
+    else {
+      var userToUpdate = result
+      var now = new Date()
+      var metric = new Metric('', req.body.value, now)
+
+      dbMet.add(userToUpdate, metric, (err: Error, result: Metric) => {
+        if(err) {
+          console.log(err)
+        }
+        if(result === null){
+          console.log("Unable to add metric to user");
+          res.redirect(`/home/${token}`)
+        } 
+        else {
+          var addedMetric = result
+          console.log("Metric successfully added");
+          res.redirect(`/home/${token}`)       
+        }
+      });
+    }
+  })
+})
+
+app.post('/metrics/delete/:token', auth, (req: any, res: any) => {
+
+  const token = req.params.token;
+  var userID = req.userID;
+
+  dbUsr.find(userID, (err: Error, result: User) => {
+    if(err) {
+      console.log(err)
+    }
+    if(result === null){
+      console.log("Unable to find user, token may be invalid");
+      res.status(400).send("Unable to find user, token may be invalid");
+    } 
+    else {
+      var userToUpdate = result
+      var metricID = req.body.metricID
+
+      dbMet.delete(userToUpdate, metricID, (err: Error, result: string) => {
+        if(err) {
+          console.log(err)
+        }
+        if(result === null){
+          console.log("Unable to delete metric to user");
+          res.redirect(`/home/${token}`)
+        } 
+        else {
+          var deletedMetricID = result
+          console.log("Metric successfully deleted");
+          res.redirect(`/home/${token}`)       
+        }
+      });
+    }
+  })
 })
 
 

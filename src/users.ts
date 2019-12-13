@@ -1,4 +1,5 @@
 import {UserMongo} from '../mongoose/user';
+import {Metric} from '../src/metrics'
 import jwt = require('jsonwebtoken');
 
 
@@ -6,10 +7,12 @@ export class User {
 
     public email: string;
     public password: string;
+    public metrics: Metric[];
   
-    constructor(email: string, password: string) {
+    constructor(email: string, password: string, metrics: Metric[]) {
       this.email = email;
       this.password = password;
+      this.metrics = metrics;
     }
 }
 
@@ -41,6 +44,7 @@ export class UsersHandler{
                 var doc = new this.userMongo.userModel();
                 doc.email = userToSave.email
                 doc.password = userToSave.password
+                doc.metrics = []
                 doc.save( (err: Error, user: any) => {
                     if (err) { throw err; }
 
@@ -93,7 +97,7 @@ export class UsersHandler{
             users.forEach( (user: any) => {
                 if(userID === user.id){
                     isFound = true
-                    myUser = new User(user.email, user.password)
+                    myUser = new User(user.email, user.password, user.metrics)
                 }
             })
             
@@ -116,7 +120,7 @@ export class UsersHandler{
         });
     }
 
-    // Update an user in db
+    // Update an user email/password in db
     public update = async (userToUpdate: User, userUpdated: User, callback: any) => {
 
         var toUpdate = true
@@ -131,7 +135,7 @@ export class UsersHandler{
                 return console.log(err);
 
             users.forEach( (user: any) => {
-                if(newEmail === user.email){
+                if(newEmail === user.email && newEmail !== userToUpdate.email){
                     toUpdate = false
                 }
             })
@@ -139,7 +143,7 @@ export class UsersHandler{
             if(toUpdate === true){
                 this.userModel.updateOne( {email: userToUpdate.email}, {email: newEmail, password: newPassword}, (err: Error, user: any) => {
                     if (err) { throw err; }
-                    var newUser = new User(newEmail, newPassword)
+                    var newUser = new User(newEmail, newPassword, userToUpdate.metrics)
                     callback(null, newUser)
                 })
             } else {
