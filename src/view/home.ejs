@@ -12,11 +12,11 @@
     <div class="container">
 
 
-        <h1>Welcome to the Home page :</h1>
+        <h1>Welcome to the Home page !</h1>
         <div class="userInfos">
             <h2> Your informations :</h2><br></br>
             <p><span class="label">Email : </span> <%= user.email %> </p>
-            <p><span class="label">Password : </span> <%= user.password %> </p>
+            <p><span class="label">Password : </span> <%= user.password %></p>
             <form class="form-group" name="logout" method="GET" action="/">
                 <button type="submit" class="btn btn-warning">Log Me Out !</button>
                 </td>
@@ -77,7 +77,7 @@
 
                     <form name="deleteMetric" method="post" action="<%= '/metrics/delete/' +  token %>">
                         <input type="hidden" name="metricID" value="<%= user.metrics[i].id %>">
-                        <button type="submit" class="btn btn-danger">Delete this Metric</button>
+                        <button type="submit" class="btn btn-outline-danger">Delete this Metric</button>
                     </form>
 
                     <form name="updateMetric" method="post" action="<%= '/metrics/update/' +  token %>">
