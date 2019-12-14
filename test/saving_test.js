@@ -1,19 +1,15 @@
 const mocha = require('mocha');
 const assert = require('assert');
+/*const userMongo = require('../mongoose/user')
 const UserMongo = require('../dist/mongoose/user.js');
-const User = require('../dist/src/users.js')
+const User = require('../dist/src/users.js')*/
 
-/*describe("Saving user test", function(){
+describe("Saving user test", function(){
 
     it("saves a User to the DB", function(){
-        //const userMongo = new UserMongo;
-        var userTpm = new User({
-            email: 'bla@ece.fr',
-            password: 'Bla',
-            metrics: []
-        });
-        const userModel = this.userMongo.userModel;
-        var doc = new this.userMongo.userModel();
+        var userMongo = new userMongo();
+        const userModel = userMongo.userModel;
+        var doc = new userMongo.userModel();
         doc.email = 'bla@ece.fr';
         doc.password = 'Bla';
         doc.metrics = [];
@@ -28,7 +24,7 @@ const User = require('../dist/src/users.js')
     });
 
     
-})*/
+})
 
 
 describe("premier test", function(){
