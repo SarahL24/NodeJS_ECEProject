@@ -60,4 +60,28 @@ export class MetricsHandler {
     })
   }
 
+    // Update a metric in db
+    public update = async (user: User, metricID: string, newValue: number, callback: any) => {
+
+      var toUpdate = true
+  
+      await this.userModel.find().exec( (err: Error, users: any) => {
+        
+          if(err)
+            return console.log(err);
+  
+          if(toUpdate === true){
+              this.userModel.updateOne( 
+                {email: user.email, "metrics._id": metricID}, 
+                {$set: {"metrics.$.value": newValue}},
+                (err: Error, result: any) => {
+                  if (err) { throw err; }
+                  callback(null, metricID)
+              })
+          } else {
+              callback(null, null)
+          }
+      })
+    }
+
 }

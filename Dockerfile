@@ -14,4 +14,7 @@ COPY . .
 #Expose port and start application
 EXPOSE 8080
 
+#Populate databas
+CMD [ "npm", "run", "populate" ]
+
 CMD [ "npm", "start" ]

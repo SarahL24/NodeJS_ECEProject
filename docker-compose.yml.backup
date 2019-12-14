@@ -14,5 +14,6 @@ services:
     - "27017:27017"
     volumes:
     - data-volume:/data/db
+    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 volumes:
     data-volume:

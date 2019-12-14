@@ -152,5 +152,21 @@ export class UsersHandler{
         })
     }
 
+    // drop the database of users
+    public drop = async (callback: any) => { 
+        
+        var toDrop = true;
+
+        if(toDrop === true){
+            await this.userModel.deleteMany({}, (err: Error, result: any) => {
+                if (err) { throw err; }
+                callback(null, result)
+            })
+        } else {
+            callback(null, null)
+        }
+        
+    }
+
 }
 
