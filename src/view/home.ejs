@@ -51,7 +51,7 @@
                     <form name="addMetric" method="post" action="<%= '/metrics/add/' +  token %>">
 
                         <label for="value">Value :</label>
-                        <input type="text" class="form-control" id="value" name="value">
+                        <input type="number" class="form-control" id="value" name="value">
 
                         <button type="submit" class="btn btn-success">Add this
                             Metric</button>
@@ -82,7 +82,7 @@
 
                     <form name="updateMetric" method="post" action="<%= '/metrics/update/' +  token %>">
                         <input type="hidden" name="metricID" value="<%= user.metrics[i].id %>">
-                        <label for="newValue">Change the value :</label> <input class="form-control" type="text"
+                        <label for="newValue">Change the value :</label> <input class="form-control" type="number"
                             id="newValue" name="newValue">
                         <button type="submit" class="btn btn-info">Update this Metric</button>
                     </form>

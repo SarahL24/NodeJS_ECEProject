@@ -25,11 +25,11 @@ var connection = mongoDB.connect
         });
 
         const metrics: Metric[] = [
-            new Metric('1233378fed1', 14, new Date('December 17, 1995 03:24:00')),
-            new Metric('1233378fed2', 5, new Date('October 9, 2002 04:21:00')),
-            new Metric('1233378fed3', 18, new Date('October 19, 2012 08:16:00')),
-            new Metric('1233378fed4', 30, new Date('November 7, 2019 05:21:00')),
-            new Metric('1233378fed5', 5, new Date('January 22, 2018 07:39:00')),
+            new Metric(14, new Date('December 17, 1995 03:24:00')),
+            new Metric(5, new Date('October 9, 2002 04:21:00')),
+            new Metric(18, new Date('October 19, 2012 08:16:00')),
+            new Metric(30, new Date('November 7, 2019 05:21:00')),
+            new Metric(5, new Date('January 22, 2018 07:39:00')),
         ]
 
         const users: User[] = [

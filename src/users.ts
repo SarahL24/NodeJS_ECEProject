@@ -44,7 +44,7 @@ export class UsersHandler{
                 var doc = new this.userMongo.userModel();
                 doc.email = userToSave.email
                 doc.password = userToSave.password
-                doc.metrics = []
+                doc.metrics = userToSave.metrics
                 doc.save( (err: Error, user: any) => {
                     if (err) { throw err; }
 
