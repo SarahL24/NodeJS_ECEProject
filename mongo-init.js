@@ -11,7 +11,7 @@ db.users.insertMany([
 	{
 		email: 'sarah.lehuby@gmail.com',
 		password: 'latiteSassa',
-		metrics: [] 
+		metricas: [{value: 44}] 
 	},
 	{
 		email: 'amir.missidi@yahoo.fr',
