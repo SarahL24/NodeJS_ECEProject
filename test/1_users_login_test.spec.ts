@@ -39,8 +39,9 @@ describe("Users test 2", function () {
 
     it("try to login a User who not exist to the DB, err should be null, result should be equal to -1", function (done) {
         var userToLog = new User('notexist@ece.fr', 'sarah', [])
+        console.log(userToLog);
         dbUsr.login(userToLog, (err: Error, result: any) => {
-            //console.log("test 4 login fail:", result);
+            console.log("test 4 login fail:", result);
             //console.log(err);
             expect(err).to.be.null;
             expect(result).to.not.be.undefined;
