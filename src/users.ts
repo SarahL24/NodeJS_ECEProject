@@ -127,6 +127,7 @@ export class UsersHandler{
     public update = async (userToUpdate: User, userUpdated: User, callback: any) => {
 
         var toUpdate = true
+        var errorTest;
 
         var newEmail = ""
         var newPassword = ""
@@ -140,6 +141,7 @@ export class UsersHandler{
             users.forEach( (user: any) => {
                 if(newEmail === user.email && newEmail !== userToUpdate.email){
                     toUpdate = false
+                    errorTest = -1;
                 }
             })
 
@@ -150,7 +152,7 @@ export class UsersHandler{
                     callback(null, newUser)
                 })
             } else {
-                callback(null, null)
+                callback(null, errorTest)
             }
         })
     }
