@@ -1,5 +1,5 @@
 # NodeJS Project
-https://travis-ci.com/SarahL24/NodeJS_ECEProject.svg?branch=tests
+[![Build Status](https://travis-ci.com/SarahL24/NodeJS_ECEProject.svg?branch=tests)](https://travis-ci.com/SarahL24/NodeJS_ECEProject)
 
 In this lab, we were asked to do a simple project that runs a 'hello world' app. We expose a simple REST API that get, delete and post metrics 
 
