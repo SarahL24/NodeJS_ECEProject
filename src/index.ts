@@ -124,6 +124,7 @@ app.post('/user/update/:token', auth, (req: any, res: any) => {
   
   const token = req.params.token;
   var userID = req.userID;
+  console.log(userID);
 
   dbUsr.find(userID, (err: Error, result: User) => {
     if(err) {

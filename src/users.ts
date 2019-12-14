@@ -83,7 +83,7 @@ export class UsersHandler{
                 callback(null, token)
 
             } else {
-                callback(null, null)
+                callback(null, userID)
             }
         });
     }
