@@ -1,154 +1,87 @@
-import {LevelDB} from './leveldb'
-import WriteStream from 'level-ws'
-
+import {UserMongo} from '../mongoose/user';
+import jwt = require('jsonwebtoken');
+import {User} from './users'
 
 export class Metric {
-  public timestamp: string;
-  public value: number;
 
-  constructor(ts: string, v: number) {
-    this.timestamp = ts;
-    this.value = v
+  public id: string;
+  public value: number;
+  public date: Date;
+
+  constructor(id: string, value: number, date: Date) {
+    this.id = id;
+    this.value = value;
+    this.date = date;
   }
 }
 
 export class MetricsHandler {
-    private db: any ;
+  public userMongo = new UserMongo();
+  public userModel = this.userMongo.userModel;
 
-    constructor(dbPath: string) {
-      this.db = LevelDB.open(dbPath)
-    }
+  // Add a metric of user in db
+  public add = async (userToUpdate: User, metric: Metric, callback: any) => {
 
-    public save (
-      key : number,
-      metrics : Metric[],
-      callback: (error:Error | null) => void
-    ){
-      const stream = WriteStream(this.db);
-      stream.on('error', callback);
-      stream.on('close', callback);
-      metrics.forEach((m: Metric) => {
-        stream.write({ key: `metric:${key}:${m.timestamp}`, value: m.value })
-      });
-      stream.end()
-    }
+    var toUpdate = true
 
-    public getAll (
-      callback: (error:Error | null, result: any) => void
-    ){
+    await this.userModel.find().exec( (err: Error, users: any) => {
+        if(err)
+          return console.log(err);
 
-      let metrics: Metric[] = [];
-      const rs = this.db.createReadStream()
-        .on('data', function (data) {
-          console.log(data.key, '=', data.value) ;
-          const timestamp = data.key.split(':')[2];
-          let metric: Metric = new Metric(timestamp, data.value);
-          metrics.push(metric)
-        })
-        .on('error', function (err) {
-          console.log('Oh my!', err);
-          callback(err ,null)
-        })
-        .on('close', function () {
-          console.log('Stream closed')
-        })
-        .on('end', function () {
-          console.log('Stream ended');
-          callback(null, metrics)
-        })
-    }
+        if(toUpdate === true){
+            this.userModel.updateOne( {email: userToUpdate.email}, {$push: {metrics: metric}}, (err: Error, user: any) => {
+              if (err) { throw err; }
+              callback(null, metric)
+            })
+        } else {
+            callback(null, null)
+        }
+    })
+  }
 
+  // Delete a metric in db
+  public delete = async (user: User, metricID: string, callback: any) => {
 
-    public getOne(
-      key : number,
-      callback: (error:Error | null, result:any) => void){
-        let metrics: Metric[] = [];
-        const rs = this.db.createReadStream()
-        .on('data', function (data) {
-          //console.log("key :", data.key)
-          const tmp = data.key.split(':')[1];
-          //console.log("test :", tmp)
-          //console.log("key parameters :", key)
-          if(tmp === key){
-            console.log(data.key, '=', data.value) ;
-            const timestamp = data.key.split(":")[2];
-            let metric: Metric = new Metric(timestamp,data.value);
-            metrics.push(metric)
+    var toDelete = true
+
+    await this.userModel.find().exec( (err: Error, users: any) => {
+      
+        if(err)
+          return console.log(err);
+
+        if(toDelete === true){
+            this.userModel.updateOne( {email: user.email}, {$pull: {metrics: {_id: metricID}}}, (err: Error, user: any) => {
+              if (err) { throw err; }
+              callback(null, metricID)
+            })
+        } else {
+            callback(null, null)
+        }
+    })
+  }
+
+    // Update a metric in db
+    public update = async (user: User, metricID: string, newValue: number, callback: any) => {
+
+      var toUpdate = true
+  
+      await this.userModel.find().exec( (err: Error, users: any) => {
+        
+          if(err)
+            return console.log(err);
+  
+          if(toUpdate === true){
+              this.userModel.updateOne( 
+                {email: user.email, "metrics._id": metricID}, 
+                {$set: {"metrics.$.value": newValue}},
+                (err: Error, result: any) => {
+                  if (err) { throw err; }
+                  callback(null, metricID)
+              })
+          } else {
+              callback(null, null)
           }
-        })
-        .on('error', function (err) {
-          console.log('Oh my!', err);
-          callback(err ,null)
-        })
-        .on('close', function () {
-          console.log('Stream closed')
-        })
-        .on('end', function () {
-          console.log('Stream ended');
-          callback(null, metrics)
-        })
-
-      }
-
-      public deleteOne(
-        key : number,
-
-        callback: (error:Error | null, result:any) => void){
-        let dataSuppressed : Metric[] = [];
-
-        const rs = this.db.createReadStream()
-        .on('data', (data) => {
-            const datakey = data.key;
-            const userkey = data.key.split(":")[1];
-            if(key === userkey) {
-              const timestamp = data.key.split(":")[2];
-              let metric: Metric = new Metric(timestamp,data.value);
-              dataSuppressed.push(metric);
-
-              this.db.del(datakey)
-            }
-        })
-        .on('err', function (err) {
-          callback(err, key)
-        })
-        .on('close', function () {
-          console.log('Stream closed')
-        })
-        .on('end', function () {
-          console.log('Stream ended');
-          console.log(dataSuppressed);
-          callback(null, dataSuppressed)
-        })
-
-        }
-
-      public deleteAll(
-          callback: (error:Error | null, result:any) => void){
-          let dataSuppressed : Metric[] = [];
-
-          const rs = this.db.createReadStream()
-          .on('data', (data) => {
-              const datakey = data.key;
-              const userkey = data.key.split(":")[1];
-              const timestamp = data.key.split(":")[2];
-              let metric: Metric = new Metric(timestamp,data.value);
-              dataSuppressed.push(metric);
-
-              this.db.del(datakey)
-
-          })
-          .on('err', function (err) {
-            callback(err, null)
-          })
-          .on('close', function () {
-            console.log('Stream closed')
-          })
-          .on('end', function () {
-            console.log('Stream ended');
-            console.log(dataSuppressed);
-            callback(null, dataSuppressed)
-          })
-
-        }
+      })
+    }
 
 }

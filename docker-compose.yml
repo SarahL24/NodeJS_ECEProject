@@ -1,0 +1,16 @@
+version: "2"
+services:
+  web:
+    container_name: eceproject-web
+    build: .
+    ports:
+    - "8080:8080"
+    depends_on:
+    - mongo
+  mongo:
+    container_name: eceproject-mongo
+    image: mongo
+    ports:
+    - "27017:27017"
+    volumes:
+    - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+
+    <% include partials/head %>
+    <link href="/css/home.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body >
+    <div class="container">
+
+
+        <h1>Welcome to the Home page !</h1>
+        <div class="userInfos">
+            <h2> Your informations :</h2><br></br>
+            <p><span class="label">Email : </span> <%= user.email %> </p>
+            <p><span class="label">Password : </span> <%= user.password %></p>
+            <form class="form-group" name="logout" method="GET" action="/">
+                <button type="submit" class="btn btn-warning">Log Me Out !</button>
+                </td>
+            </form>
+        </div>
+
+
+        <div class="contain">
+            <div class="card">
+                <div class="card-header">
+                    <h3> Update your informations </h3>
+                </div>
+                <div class="card-body update">
+                    <form class="form-group" name="update" method="post" action="<%= '/user/update/' +  token %>">
+
+
+                        <label for="newEmail">New Email :</label>
+                        <input type="text" class="form-control" id="newEmail" name="newEmail">
+                        <label for="newPassword">New Password :</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword">
+                        <button type="submit" class="btn btn-primary">Update</button>
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3> Add a metric </h3>
+                </div>
+                <div class="card-body update">
+                    <form name="addMetric" method="post" action="<%= '/metrics/add/' +  token %>">
+
+                        <label for="value">Value :</label>
+                        <input type="number" class="form-control" id="value" name="value">
+
+                        <button type="submit" class="btn btn-success">Add this
+                            Metric</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" showMetrics showMetricsColor">
+        <h2> Your metrics :</h2>
+        <ul class="metrics list-group list-group-flush showMetricsColor">
+            <% for (var i = 0; i < user.metrics.length; i++) { %>
+            <li class="metric-line list-group-item showMetricsColor">
+                <div class="showMetricsColor">
+                    <span class="metric-value" style="text-align:left">
+                        <p> <span class="label">Value : </span><%= user.metrics[i].value %> </p>
+                    </span>
+                    <span class="metric-date" style="text-align:left">
+                        <p> <span class="label">Date of creation :</span> <%= user.metrics[i].date  %> </p>
+                    </span>
+
+                    <form name="deleteMetric" method="post" action="<%= '/metrics/delete/' +  token %>">
+                        <input type="hidden" name="metricID" value="<%= user.metrics[i].id %>">
+                        <button type="submit" class="btn btn-outline-danger">Delete this Metric</button>
+                    </form>
+
+                    <form name="updateMetric" method="post" action="<%= '/metrics/update/' +  token %>">
+                        <input type="hidden" name="metricID" value="<%= user.metrics[i].id %>">
+                        <label for="newValue">Change the value :</label> <input class="form-control" type="number"
+                            id="newValue" name="newValue">
+                        <button type="submit" class="btn btn-info">Update this Metric</button>
+                    </form>
+                </div>
+            </li>
+            <% } %>
+        </ul>
+    </div>
+
+    <div class="deletPart">
+        <div class="card">
+            <div class="card-header">
+                <h3>Delete your Account</h3>
+            </div>
+            <div class="card-body buttonDelete">
+                <form name="delete" method="post" action="<%= '/user/delete/' +  token %>">
+                    <button type="submit" class="btn btn-danger">Delete this Account</button>
+                    </td>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+}
+
+h1
+{
+    text-align: center;
+}
+h2{
+    margin-top : 30px;
+}
+
+.userInfos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+label{
+    margin-right: 10px;
+}
+
+.showMetrics {
+    width: 800px;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.showMetrics h2 {
+    text-align: center;
+}
+
+.showMetricsColor {
+    background: #F9E49F;
+}
+
+.showMetrics button{
+    margin-top : 5px;
+}
+
+.showMetrics label{
+    margin-top : 10px;
+    font-size: larger;
+    font-weight: 700;
+    color: #54280B;
+}
+.label {
+    font-weight: bold;
+}
+table tr {
+    margin-top: 20px;
+}
+
+.contain {
+    display: flex;
+    justify-content: center;
+}
+
+.card  {
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.deletPart{
+    margin-top : 50px;
+    
+
+}
+
+.buttonDelete{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.update {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+
+.update button {
+    margin-top : 10px;
+}
