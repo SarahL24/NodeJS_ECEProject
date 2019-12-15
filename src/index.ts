@@ -270,6 +270,7 @@ var connection = mongoDB.connect;
     })
   })
 
+  app.post('/metrics/update/:token', auth, (req: any, res: any) => {
 
 
 

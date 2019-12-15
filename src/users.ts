@@ -25,6 +25,7 @@ export class UsersHandler{
     public signup = async (userToSave: User, callback: any) => {
         
         var toSave = true;
+        var errorTest: number = 0; // error vaut 1 si tout user deja existant, vaut 2 si pas de password or email set
 
         await this.userModel.find().exec( (err: Error, users: any) => {
             if(err)
@@ -33,10 +34,12 @@ export class UsersHandler{
                if(userToSave.email === user.email){
                     console.log('User already exists');
                     toSave = false;
+                    errorTest = 1;
                }
                if(userToSave.email === '' || userToSave.password === ''){
                     console.log('User have no password or email set');
                     toSave = false;
+                    errorTest = 2;
                }
             });
 
@@ -52,7 +55,7 @@ export class UsersHandler{
                     callback(null, token)
                 });
             } else {
-                callback(null, null)
+                callback(null, errorTest)
             }
          });
          
@@ -80,7 +83,7 @@ export class UsersHandler{
                 callback(null, token)
 
             } else {
-                callback(null, null)
+                callback(null, userID)
             }
         });
     }
@@ -124,6 +127,7 @@ export class UsersHandler{
     public update = async (userToUpdate: User, userUpdated: User, callback: any) => {
 
         var toUpdate = true
+        var errorTest;
 
         var newEmail = ""
         var newPassword = ""
@@ -137,6 +141,7 @@ export class UsersHandler{
             users.forEach( (user: any) => {
                 if(newEmail === user.email && newEmail !== userToUpdate.email){
                     toUpdate = false
+                    errorTest = -1;
                 }
             })
 
@@ -147,7 +152,7 @@ export class UsersHandler{
                     callback(null, newUser)
                 })
             } else {
-                callback(null, null)
+                callback(null, errorTest)
             }
         })
     }
