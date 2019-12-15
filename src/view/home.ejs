@@ -1,3 +1,5 @@
+
+         
 <!doctype html>
 <html lang="fr">
     
@@ -6,6 +8,7 @@
     </head>
 
     <body class="container" style="padding-top: 15px;">
+        <div id="data" data-user=<%= JSON.stringify(user) %>></div>
         <div>
             <h1>Welcome to the Home page :</h1>
             <p> Your informations :</p>
@@ -74,9 +77,46 @@
                             </form>
                         </div>
                     </li>
+                   
                     <% } %>
                 </ul>
+                <div>
+                    <canvas id="myChart"></canvas>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0">     </script>
+                        <script>
+                            var ctx = document.getElementById("myChart").getContext("2d"); 
+                            var userData = document.getElementById('data').dataset.user;                            
 
+
+                            var user = JSON.parse(userData);
+                            var chart = new Chart(ctx, {
+                                    // The type of chart we want to create
+                                    type: "line",
+
+                                    // The data for our dataset
+                                    data: {
+                                                labels: user.metrics.map(({ date }) => date),
+                                                datasets: [{
+                                                    label: 'My metrics ',
+                                                    backgroundColor: 'rgb(255, 99, 132)',
+                                                    borderColor: 'rgb(255, 99, 132)',
+                                                    data: user.metrics.map(({ value }) => value)         }]
+                                            },
+                                                
+                                    // Configuration options go here
+                                    options: {}
+                                    });
+                            
+                       
+                             
+                                        </script>
+
+                               
+                </div>
+
+                <div>
+                       
+                </div>
         </div>
     </body>
 </html>
