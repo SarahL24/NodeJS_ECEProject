@@ -132,7 +132,7 @@ and then, inside this terminal :
 
 When you are finished with the project, type :
 ```bash
-    docker-compose down
+    docker-compose down --rmi all -v
 ```
 
 ## Contributors
