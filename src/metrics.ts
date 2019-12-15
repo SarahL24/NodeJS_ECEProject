@@ -4,12 +4,10 @@ import {User} from './users'
 
 export class Metric {
 
-  //public id: string;
   public value: number;
   public date: Date;
 
   constructor(value: number, date: Date) {
-    //this.id = id;
     this.value = value;
     this.date = date;
   }
