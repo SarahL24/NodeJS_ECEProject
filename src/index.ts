@@ -3,6 +3,7 @@ import {MongoDB} from '../mongoose/mongodb';
 import {User, UsersHandler} from './users';
 import {Metric, MetricsHandler} from './metrics';
 import path = require('path');
+import mongoose = require('mongoose')
 const app = express()
 const auth = require('./auth');
 const port: string = process.env.PORT || '8080'
@@ -10,11 +11,38 @@ const port: string = process.env.PORT || '8080'
 const dbUsr: UsersHandler = new UsersHandler()
 const dbMet: MetricsHandler = new MetricsHandler()
 
-const mongoDB = new MongoDB();
+//const mongoDB = new MongoDB();
+
+// ===================== Mongo ========================== //
+const options = {
+  autoIndex: false, // Don't build indexes
+  poolSize: 10, // Maintain up to 10 socket connections
+  bufferMaxEntries: 0,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}
 
 
-var connection = mongoDB.connect;
-    connection.then((value) => {
+console.log('Connection to MongoDB...')
+var db = mongoose.connect("mongodb://localhost:27017/nodeProject", options)
+.then(()=>{
+    console.log('MongoDB is connected to localhost')
+})
+.catch( (err) => {
+    console.log('Unable to connect to local MongoDB, trying to reach mongo container')
+
+    db = mongoose.connect("mongodb://mongo:27017/nodeProject", options)
+    .then( ()=>{
+        console.log('MongoDB is connected to mongo container')
+    })
+    .catch(err => {
+        console.log('Unable to connect to the container MongoDB.')
+        console.log(err)
+    })
+})
+
+// ===================== Mongo ========================== //
+
     app.use(express.static(path.join(__dirname, '../public')))
     app.use(express.urlencoded())
     app.use(express.json())
@@ -27,6 +55,11 @@ var connection = mongoDB.connect;
     })
 
     app.get('/home', (req: any, res: any) => {
+      res.redirect('/')
+    })
+
+    app.get('/disconnect/db', (req: any, res: any) => {
+      db.disconnect()
       res.redirect('/')
     })
 
@@ -268,7 +301,7 @@ var connection = mongoDB.connect;
       }
       console.log(`server is listening on port ${port}`)
     })
-  })
+
 
 
 
