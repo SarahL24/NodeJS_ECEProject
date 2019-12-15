@@ -1,71 +1,55 @@
 # NodeJS Project
 [![Build Status](https://travis-ci.com/SarahL24/NodeJS_ECEProject.svg?branch=tests)](https://travis-ci.com/SarahL24/NodeJS_ECEProject)
 
-In this lab, we were asked to do a simple project that runs a 'hello world' app. We expose a simple REST API that get, delete and post metrics 
+This is a NodeJS Project used with a Mongo Database made for learning purposes for ECE Paris-Lyon Engineering School. The goal was to build a simple REST API allowing CRUD operations on users and their metrics. The API comes with a web app including authentification and user interface. 
 
-## Prerequisites
+This project is to be marked for two main courses : **Technologies Web** and **DevOps**
 
-Before you begin, you first need to install ```nodejs```. You also need **Postman** to post, get and delete the metrics
+## For "Technologies Web"
+
+### Prerequisites
+
+Before you begin, you first need to install ```nodejs``` and ```mongodb``` and activate the mongod service on port 21017. You can also use **Postman** to test the API
 
 
-## Installing NodeJS Project
+## Install
 
-Move to your project directory after cloning the repository. Then, run the command :
+To install the project, first clone the GitHub repository with the command :
+
 ```bash
-    npm install
-``` 
-To populate with some dummy data, use this command:
+   git clone https://github.com/SarahL24/NodeJS_ECEProject.git
+```
+
+Then, open the folder and in your console, type :
 ```bash
-    npm run popdb
-``` 
+   npm install
+```
 
-To start the server, just type the command :
+Now, to start the server, you only have to run : 
+Then, open the folder and in your console, type :
 ```bash
-    npm start
-``` 
-
-## Using NodeJS Project
-
-To use this lab, you can see the metrics going to this URL :
-* [All metrics](http://localhost:8080/metrics)
-* [Metrics of user 2](http://localhost:8080/metrics/2)
-
-For the rest of the lab, you should use **Postman**.
-
-#### Get Functions
-
-In **Postman**, you can perform a *GET* to this URL to see all metrics :
-```
-    http://localhost:8080/metrics
+   npm start
 ```
 
-then, to see all metrics of user 2, perform a *GET* to :
+To populate the database, in an other console, type :
+```bash
+   npm run populate
 ```
-    http://localhost:8080/metrics/2
-```
+You can populate either before or after running the server.
 
-#### Post Functions
+## Using the project
 
-In **Postman**, you can perform a *POST* to this URL to post a metric of user 2 :
-```
-    http://localhost:8080/metrics/2
-```
-with the following **body** : 
-```JSON
-[
-  { "timestamp":"1384686660000", "value":22 }
-]
-```
+The server listens on port 8080 of your localhost.
 
-Then you should see the new value with the *GET* function.
+Here is the table of all the routes available
 
-#### Delete Functions
+|                |ASCII                          |HTML                         |
+|----------------|-------------------------------|-----------------------------|
+|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
+|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
+|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
 
-then, to delete all metrics of user 2, perform a *DELETE* to :
-http://localhost:8080/metrics/2
-
-In **Postman**, you can perform a *DELETE* to this URL to delete all metrics :
-http://localhost:8080/metrics/
+-------------
 
 ## Contributors
 
