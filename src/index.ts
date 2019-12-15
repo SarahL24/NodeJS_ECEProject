@@ -170,7 +170,7 @@ var connection = mongoDB.connect;
         else {
           var userToUpdate = result
           var now = new Date()
-          var metric = new Metric('', req.body.value, now)
+          var metric = new Metric(req.body.value, now)
 
           dbMet.add(userToUpdate, metric, (err: Error, result: Metric) => {
             if(err) {
@@ -270,7 +270,6 @@ var connection = mongoDB.connect;
     })
   })
 
-  app.post('/metrics/update/:token', auth, (req: any, res: any) => {
 
 
 

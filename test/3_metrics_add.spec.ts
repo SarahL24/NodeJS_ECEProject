@@ -27,7 +27,7 @@ describe("Metrics test 1 Add", function () {
     it("add a metric to a User, err should be null, result should not be undefined and be an Object", function (done) {
         var userToAdd = new User('sarah92@hotmail.fr', 'sarah', [])
         var now = new Date()
-        var metric = new Metric('', 25, now)
+        var metric = new Metric(25, now)
         dbMet.add(userToAdd, metric, (err: Error, result: any) => {
             //console.log("test 6 add metric OK:", result);
             //console.log(err);
