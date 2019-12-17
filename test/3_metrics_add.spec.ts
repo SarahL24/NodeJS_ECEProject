@@ -1,5 +1,5 @@
 import { expect, assert } from 'chai';
-import { MongoDB } from '../mongoose/mongodb';
+import db from '../mongoose/mongodb';
 import { User, UsersHandler } from '../src/users';
 import { UserMongo } from '../mongoose/user';
 import { Metric, MetricsHandler } from '../src/metrics';
@@ -8,20 +8,15 @@ import { Metric, MetricsHandler } from '../src/metrics';
 var dbUsr: UsersHandler;
 var dbMet: MetricsHandler;
 var userMongo: UserMongo;
-var mongodb: MongoDB;
 var MetricID: string;
 
 describe("Metrics test 1 Add", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        mongodb = new MongoDB();
-        dbMet = new MetricsHandler()
-        var connection = mongodb.connect.then((value) => {
-            console.log(value);
-            done();
-
-        });
+        dbMet = new MetricsHandler();
+        done();
+        
     });
 
     it("add a metric to a User, err should be null, result should not be undefined and be an Object", function (done) {

@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { MongoDB } from '../mongoose/mongodb';
+import db from '../mongoose/mongodb';
 import { User, UsersHandler } from '../src/users';
 import { UserMongo } from '../mongoose/user';
+import mongoose = require('mongoose');
 
 
 var dbUsr: UsersHandler;
 var userMongo: UserMongo;
-var mongodb: MongoDB;
 
 describe("Users test 3 Delete", function () {
 
@@ -14,11 +14,7 @@ describe("Users test 3 Delete", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        mongodb = new MongoDB();
-        var connection = mongodb.connect.then((value) => {
-            console.log(value);
-            done();
-        });
+        done();
     });
 
     it("delete a user, err should be null, result should not be undefined and equal to a user", function (done) {
@@ -27,6 +23,8 @@ describe("Users test 3 Delete", function () {
             console.log("test 5 delete:", result);
             console.log(err);
             expect(err).to.be.null;
+            expect(result).to.not.be.undefined;
+            expect(result).to.be.a('Object');
         }).then(() => {
             done();
         }).catch(err => {
@@ -35,5 +33,9 @@ describe("Users test 3 Delete", function () {
         });
 
     });
+
+    after(function (){
+        mongoose.disconnect().then(()=>{console.log("disconnected");});
+    })
 
 });

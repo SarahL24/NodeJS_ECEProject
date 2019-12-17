@@ -1,14 +1,14 @@
 import { expect, assert } from 'chai';
-import { MongoDB } from '../mongoose/mongodb';
+import db from '../mongoose/mongodb';
 import { User, UsersHandler } from '../src/users';
 import { UserMongo } from '../mongoose/user';
 import { Metric, MetricsHandler } from '../src/metrics';
+import mongoose = require('mongoose');
 
 
 var dbUsr: UsersHandler;
 var dbMet: MetricsHandler;
 var userMongo: UserMongo;
-var mongodb: MongoDB;
 var userToSave: User;
 var userToSaveWrong: User;
 var userUpdate: User;
@@ -19,11 +19,9 @@ describe("Users test 1 Saving", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        mongodb = new MongoDB();
         dbMet = new MetricsHandler()
         a = 1;
-        var connection = mongodb.connect.then((value) => {
-            console.log(value);
+        db.then(() => {
             dbUsr.drop((err: Error, result: any)=>{
                 console.log("drop", result);
 
@@ -90,7 +88,7 @@ describe("Users test 1 Saving", function () {
             //console.log(err);
             expect(err).to.be.null;
             expect(result).to.not.be.undefined;
-            expect(result).to.equal(2);
+            expect(result).to.equal(-2);
         })
             .then(() => {
                 done();

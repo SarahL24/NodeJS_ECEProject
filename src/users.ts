@@ -34,12 +34,12 @@ export class UsersHandler{
                if(userToSave.email === user.email){
                     console.log('User already exists');
                     toSave = false;
-                    errorTest = 1;
+                    errorTest = -1;
                }
                if(userToSave.email === '' || userToSave.password === ''){
                     console.log('User have no password or email set');
                     toSave = false;
-                    errorTest = 2;
+                    errorTest = -2;
                }
             });
 

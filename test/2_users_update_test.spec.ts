@@ -1,11 +1,10 @@
 import { expect } from 'chai';
-import { MongoDB } from '../mongoose/mongodb';
+import db from '../mongoose/mongodb';
 import { User, UsersHandler } from '../src/users';
 import { UserMongo } from '../mongoose/user';
 
 
 var dbUsr: UsersHandler;
-var mongodb: MongoDB;
 var userUpdate: User;
 
 
@@ -14,11 +13,7 @@ describe("Users test 3 Updating", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        mongodb = new MongoDB();
-        var connection = mongodb.connect.then((value) => {
-            console.log(value);
-           done();
-        });
+        done();
     });
 
     it("update a user, err should be null, result should not be undefined and equal to a user", function (done) {

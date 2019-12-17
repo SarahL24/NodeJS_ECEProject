@@ -11,7 +11,7 @@
 <body >
     <div class="container">
 
-
+        <div id="data" data-user=<%= JSON.stringify(user) %>></div>
         <h1>Welcome to the Home page !</h1>
         <div class="userInfos">
             <h2> Your informations :</h2><br></br>
@@ -90,6 +90,39 @@
             </li>
             <% } %>
         </ul>
+    </div>
+
+    <div>
+        <canvas id="myChart"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0">     </script>
+        <script>
+            var ctx = document.getElementById("myChart").getContext("2d"); 
+            var userData = document.getElementById('data').dataset.user;                            
+
+
+            var user = JSON.parse(userData);
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: "line",
+
+                // The data for our dataset
+                data: {
+                    labels: user.metrics.map(({ date }) => date),
+                    datasets: [{
+                        label: 'My metrics ',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: user.metrics.map(({ value }) => value)         
+                    }]
+                },
+                            
+                // Configuration options go here
+                options: {}
+                });
+                
+        </script>
+
+                   
     </div>
 
     <div class="deletPart">

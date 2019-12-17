@@ -1,23 +1,16 @@
 import { expect } from 'chai';
-import { MongoDB } from '../mongoose/mongodb';
+import db from '../mongoose/mongodb';
 import { User, UsersHandler } from '../src/users';
 import { UserMongo } from '../mongoose/user';
 
 
 var dbUsr: UsersHandler;
-var mongodb: MongoDB;
-
-
 
 describe("Users test 2", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        mongodb = new MongoDB();
-        var connection = mongodb.connect.then((value) => {
-            console.log(value);
-            done();
-        });
+        done();
     });
 
     it("login a User to the DB, err should be null, result should not be undefined and be a token", function (done) {
@@ -53,4 +46,5 @@ describe("Users test 2", function () {
             done(err);
         });
     });
+
 });
