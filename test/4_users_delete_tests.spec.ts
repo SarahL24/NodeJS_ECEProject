@@ -21,7 +21,6 @@ describe("Users test 3 Delete", function () {
         var userToDelete = new User('todelete@ece.fr', 'sarah', [])
         dbUsr.delete(userToDelete, (err: Error, result: any) => {
             console.log("test 5 delete:", result);
-            console.log(err);
             expect(err).to.be.null;
             expect(result).to.not.be.undefined;
             expect(result).to.be.a('Object');
