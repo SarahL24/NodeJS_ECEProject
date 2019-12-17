@@ -8,15 +8,17 @@ import mongoose = require('mongoose');
 var dbUsr: UsersHandler;
 var userMongo: UserMongo;
 
-describe("Users test 3 Delete", function () {
+
+describe("Users test 3 Delete",  () => {
 
     this.timeout(150000);
-    before(function (done) {
+    before( (done) =>{
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
         done();
     });
 
+    /*
     it("delete a user, err should be null, result should not be undefined and equal to a user", function (done) {
         var userToDelete = new User('todelete@ece.fr', 'sarah', [])
         dbUsr.delete(userToDelete, (err: Error, result: any) => {
@@ -32,6 +34,7 @@ describe("Users test 3 Delete", function () {
         });
 
     });
+    */
 
     after(function (){
         mongoose.disconnect().then(()=>{console.log("disconnected");});
