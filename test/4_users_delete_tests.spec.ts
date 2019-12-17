@@ -21,7 +21,7 @@ describe("Users test 3 Delete", function () {
     
     it("delete a user, err should be null, result should not be undefined and equal to a user", function (done) {
         var userToDelete = new User('todelete@ece.fr', 'sarah', [])
-        /*dbUsr.delete(userToDelete, (err: Error, result: any) => {
+        dbUsr.delete(userToDelete, (err: Error, result: any) => {
             console.log("test 5 delete:", result);
             expect(err).to.be.null;
             expect(result).to.not.be.undefined;
@@ -31,14 +31,21 @@ describe("Users test 3 Delete", function () {
         }).catch(err => {
             console.log(err);
             done(err);
-        });*/
-        done();
+        });
 
     });
-    
 
-    after(function (){
-        mongoose.disconnect().then(()=>{console.log("disconnected");});
+    after(function (done){
+        mongoose.disconnect().then(()=>{
+            console.log("disconnected")
+            done()
+        })
+        .catch(err => {
+            console.log(err);
+            done(err);
+        });
+        
     })
+    
 
 });
