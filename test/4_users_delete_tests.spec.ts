@@ -15,13 +15,15 @@ describe("Users test 3 Delete", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        db.then(() => {
+        /*db.then(() => {
             dbUsr.drop((err: Error, result: any)=>{
                 console.log("drop", result);
 
             }).then(()=>{done();});
 
         });
+        */
+       done();
     });
 
     
