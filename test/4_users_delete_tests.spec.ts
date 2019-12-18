@@ -15,15 +15,9 @@ describe("Users test 3 Delete", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        dbUsr.drop((err: Error, result: any)=>{
-            console.log("drop", result);
-
-        }).then(()=>{ 
             var userToSign = new User('todelete@ece.fr', 'sarah', [])
             dbUsr.signup(userToSign, (err: Error, result: any) => {})
             .then(()=>{done()});
-
-        });
     
     });
 

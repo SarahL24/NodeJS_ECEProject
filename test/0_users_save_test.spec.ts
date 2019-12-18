@@ -48,7 +48,7 @@ describe("Users test 1 Saving", function () {
         });
     });
 
-    it("saves a User to the DB, err should be null, result should not be undefined and be a token", function (done) {
+    /*it("saves a User to the DB, err should be null, result should not be undefined and be a token", function (done) {
         var userToSave2 = new User('sarah92@hotmail.fr', 'sarah', []);
         dbUsr.signup(userToSave2, (err: Error, result: any) => {
             //console.log("test 1:", result);
@@ -63,9 +63,9 @@ describe("Users test 1 Saving", function () {
             console.log(err);
             done(err);
         });
-    });
+    });*/
 
-    it("saves a User to the DB, err should be null, result should not be undefined and be a token", function (done) {
+   /* it("saves a User to the DB, err should be null, result should not be undefined and be a token", function (done) {
         var userToSave2 = new User('todelete@ece.fr', 'sarah', []);
         dbUsr.signup(userToSave2, (err: Error, result: any) => {
             //console.log("test 1:", result);
@@ -80,7 +80,7 @@ describe("Users test 1 Saving", function () {
             console.log(err);
             done(err);
         });
-    });
+    });*/
 
     it("saves a User whith no password in the DB , err should be null, result should not be undefined and equal to 2", function (done) {
         userToSaveWrong = new User('bla3@ece.fr', '', []);
