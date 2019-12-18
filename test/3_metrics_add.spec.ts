@@ -15,8 +15,13 @@ describe("Metrics test 1 Add", function () {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
         dbMet = new MetricsHandler();
-        done();
-        
+         dbUsr.drop((err: Error, result: any)=>{
+         console.log("drop", result);
+        }).then(()=>{
+            var userToSign = new User('sarah92@hotmail.fr', 'sarah', [])
+            dbUsr.signup(userToSign, (err: Error, result: any) => {      
+            }).then(()=>{done();})
+        })
     });
 
     it("add a metric to a User, err should be null, result should not be undefined and be an Object", function (done) {

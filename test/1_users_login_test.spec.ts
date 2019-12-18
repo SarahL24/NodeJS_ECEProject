@@ -10,7 +10,14 @@ describe("Users test 2", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        done();
+        dbUsr.drop((err: Error, result: any)=>{
+            console.log("drop", result);
+
+        });
+        var userToSign = new User('sarah92@hotmail.fr', 'sarah', [])
+        dbUsr.signup(userToSign, (err: Error, result: any) => {     
+        }).then(()=>{done();})
+
     });
 
     it("login a User to the DB, err should be null, result should not be undefined and be a token", function (done) {
@@ -20,7 +27,7 @@ describe("Users test 2", function () {
             //console.log(err);
             expect(err).to.be.null;
             expect(result).to.not.be.undefined;
-            //expect(result).to.be.a('string');
+            expect(result).to.be.a('string');
 
         }).then(() => {
             done();

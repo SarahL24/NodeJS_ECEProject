@@ -14,7 +14,15 @@ describe("Users test 3 Updating", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-        done();
+        dbUsr.drop((err: Error, result: any)=>{
+                console.log("drop", result);
+        }).then(()=>{
+            var userToSign = new User('bla2@ece.fr', 'Bla', [])
+            dbUsr.signup(userToSign, (err: Error, result: any) => {})
+           .then(()=>{done()})
+
+        })
+            
     });
 
     it("update a user, err should be null, result should not be undefined and equal to a user", function (done) {
