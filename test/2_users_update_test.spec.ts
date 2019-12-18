@@ -1,4 +1,4 @@
-/*
+
 import { expect } from 'chai';
 import db from '../mongoose/mongodb';
 import { User, UsersHandler } from '../src/users';
@@ -35,4 +35,3 @@ describe("Users test 3 Updating", function () {
 
     });
 });
-*/

@@ -1,4 +1,3 @@
-/*
 import { expect, assert } from 'chai';
 import db from '../mongoose/mongodb';
 import { User, UsersHandler } from '../src/users';
@@ -43,4 +42,3 @@ describe("Metrics test 1 Add", function () {
     });
 
 });
-*/
