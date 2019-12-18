@@ -15,14 +15,13 @@ describe("Users test 2", function () {
         }).then(()=>{done();})
     });
 
-    it("login a User to the DB, err should be null, result should not be undefined and be a token", function (done) {
+    it("login a User to the DB, err should be null, result should not be undefined", function (done) {
         var userToLog = new User('sarah92@hotmail.fr', 'sarah', [])
         dbUsr.login(userToLog, (err: Error, result: any) => {
-            console.log("test 4 login OK:", result);
+            //console.log("test 4 login OK:", result);
             //console.log(err);
             expect(err).to.be.null;
             expect(result).to.not.be.undefined;
-            //expect(result).to.be.a('string');
 
         }).then(() => {
             done();
