@@ -13,10 +13,11 @@ describe("Users test 2", function () {
         dbUsr.drop((err: Error, result: any)=>{
             console.log("drop", result);
 
-        });
+        }).then(()=>{
         var userToSign = new User('sarah92@hotmail.fr', 'sarah', [])
         dbUsr.signup(userToSign, (err: Error, result: any) => {     
         }).then(()=>{done();})
+    })
 
     });
 
