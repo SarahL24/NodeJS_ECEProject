@@ -54,12 +54,13 @@ var UsersHandler = /** @class */ (function () {
         this.userModel = this.userMongo.userModel;
         // Sign up and save
         this.signup = function (userToSave, callback) { return __awaiter(_this, void 0, void 0, function () {
-            var toSave;
+            var toSave, errorTest;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         toSave = true;
+                        errorTest = 0;
                         return [4 /*yield*/, this.userModel.find().exec(function (err, users) {
                                 if (err)
                                     return console.log(err);
@@ -67,17 +68,19 @@ var UsersHandler = /** @class */ (function () {
                                     if (userToSave.email === user.email) {
                                         console.log('User already exists');
                                         toSave = false;
+                                        errorTest = -1;
                                     }
                                     if (userToSave.email === '' || userToSave.password === '') {
                                         console.log('User have no password or email set');
                                         toSave = false;
+                                        errorTest = -2;
                                     }
                                 });
                                 if (toSave === true) {
                                     var doc = new _this.userMongo.userModel();
                                     doc.email = userToSave.email;
                                     doc.password = userToSave.password;
-                                    doc.metrics = [];
+                                    doc.metrics = userToSave.metrics;
                                     doc.save(function (err, user) {
                                         if (err) {
                                             throw err;
@@ -87,7 +90,7 @@ var UsersHandler = /** @class */ (function () {
                                     });
                                 }
                                 else {
-                                    callback(null, null);
+                                    callback(null, errorTest);
                                 }
                             })];
                     case 1:
@@ -119,7 +122,7 @@ var UsersHandler = /** @class */ (function () {
                                     callback(null, token);
                                 }
                                 else {
-                                    callback(null, null);
+                                    callback(null, userID);
                                 }
                             })];
                     case 1:
@@ -176,7 +179,7 @@ var UsersHandler = /** @class */ (function () {
         }); };
         // Update an user email/password in db
         this.update = function (userToUpdate, userUpdated, callback) { return __awaiter(_this, void 0, void 0, function () {
-            var toUpdate, newEmail, newPassword;
+            var toUpdate, errorTest, newEmail, newPassword;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -192,6 +195,7 @@ var UsersHandler = /** @class */ (function () {
                                 users.forEach(function (user) {
                                     if (newEmail === user.email && newEmail !== userToUpdate.email) {
                                         toUpdate = false;
+                                        errorTest = -1;
                                     }
                                 });
                                 if (toUpdate === true) {
@@ -204,7 +208,7 @@ var UsersHandler = /** @class */ (function () {
                                     });
                                 }
                                 else {
-                                    callback(null, null);
+                                    callback(null, errorTest);
                                 }
                             })];
                     case 1:

@@ -1,5 +1,5 @@
 # NodeJS Project
-[![Build Status](https://travis-ci.com/SarahL24/NodeJS_ECEProject.svg?branch=tests)](https://travis-ci.com/SarahL24/NodeJS_ECEProject)
+[![Build Status](https://travis-ci.com/SarahL24/NodeJS_ECEProject.svg?branch=master)](https://travis-ci.com/SarahL24/NodeJS_ECEProject)
 
 This is a **NodeJS Project** used with a **Mongo Database** made for learning purposes for ECE Paris-Lyon Engineering School. The goal was to build a simple **REST API** allowing CRUD operations on users and their metrics. The API comes with a web app including authentification and user interface. 
 
@@ -37,16 +37,11 @@ To populate the database, in an other console, type :
 You can populate either before or after running the server.
 
 To perform the unit tests, please type in a shell :
-* On Linux
-  ```bash
+```bash
    npm run test
-    ```
-* On Windows
-   ```bash
-   npm run testWindows
-    ```
+```
+Please note that running the test script will erase the database. You will have to run populate after the tests to retrieve the initial data.
 
-Although, we had trouble closing the Mongo Connection, so you have to **manually force the scripts to end** (CTRL + C) when they are done.
 
 ### Using the project
 
@@ -87,7 +82,9 @@ If you want to access to the database, please run this command in your mongo she
     > db.users.find().pretty()
 ```
 
-Our API is very strong when trying to CRUD on users. For example, you cannot change your email address to another existing one in the database. You can choose to change only your email, your password, or both. If you delete your account, you will not be able to access to your deleted data, whether it be via typing your credentials, or via getting it with your previous token. Althought, posting incorrect type in the body will make the app crash, so please be careful.
+Our API is very strong when trying to CRUD on users. For example, you cannot change your email address to another existing one in the database. You can choose to change only your email, your password, or both. If you delete your account, you will not be able to access your deleted data, whether it be via typing your credentials, or via getting it with your previous token. Althought, posting incorrect type of data in the body will make the app crash, so please be careful.
+
+The **JavaScript** files, that work the exact same way the **TypeScript** files do, are available in the *dist* folder. 
 
 
 ## For "DevOps"

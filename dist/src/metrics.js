@@ -38,8 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = require("../mongoose/user");
 var Metric = /** @class */ (function () {
-    function Metric(id, value, date) {
-        this.id = id;
+    function Metric(value, date) {
         this.value = value;
         this.date = date;
     }

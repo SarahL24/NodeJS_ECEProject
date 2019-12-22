@@ -35,9 +35,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
-var mongodb_1 = require("../mongoose/mongodb");
+var mongodb_1 = __importDefault(require("../mongoose/mongodb"));
 var users_1 = require("./users");
 var metrics_1 = require("./metrics");
 var path = require("path");
@@ -46,9 +49,9 @@ var auth = require('./auth');
 var port = process.env.PORT || '8080';
 var dbUsr = new users_1.UsersHandler();
 var dbMet = new metrics_1.MetricsHandler();
-var mongoDB = new mongodb_1.MongoDB();
-var connection = mongoDB.connect;
-connection.then(function (value) {
+//const mongoDB = new MongoDB();
+// ===================== Mongo ========================== //
+var code = function () {
     app.use(express.static(path.join(__dirname, '../public')));
     app.use(express.urlencoded());
     app.use(express.json());
@@ -75,7 +78,7 @@ connection.then(function (value) {
                 }
                 else {
                     var myUser = result;
-                    res.render('home.ejs', { user: myUser, token: req.params.token });
+                    res.render('home.ejs', { user: myUser, token: token });
                 }
             });
             return [2 /*return*/];
@@ -87,8 +90,12 @@ connection.then(function (value) {
             if (err) {
                 console.log(err);
             }
-            if (result === null) {
-                console.log("Unable to save user");
+            if (result === -1) {
+                console.log("Unable to save user, user already exists");
+                res.redirect('/');
+            }
+            else if (result === -2) {
+                console.log("Unable to save user, no email or password set");
                 res.redirect('/');
             }
             else {
@@ -103,7 +110,7 @@ connection.then(function (value) {
             if (err) {
                 console.log(err);
             }
-            if (result === null) {
+            if (result === -1) {
                 console.log("Unable to find user");
                 res.redirect('/');
             }
@@ -160,7 +167,7 @@ connection.then(function (value) {
                     if (err) {
                         console.log(err);
                     }
-                    if (result === null) {
+                    if (result === -1) {
                         console.log("Unable to update user");
                         res.redirect("/home/" + token);
                     }
@@ -187,7 +194,7 @@ connection.then(function (value) {
             else {
                 var userToUpdate = result;
                 var now = new Date();
-                var metric = new metrics_1.Metric('', req.body.value, now);
+                var metric = new metrics_1.Metric(req.body.value, now);
                 dbMet.add(userToUpdate, metric, function (err, result) {
                     if (err) {
                         console.log(err);
@@ -274,4 +281,7 @@ connection.then(function (value) {
         }
         console.log("server is listening on port " + port);
     });
+};
+mongodb_1.default.then(function () {
+    code();
 });
