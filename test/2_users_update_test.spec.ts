@@ -14,9 +14,18 @@ describe("Users test 3 Updating", function () {
     before(function (done) {
         this.enableTimeouts(false);
         dbUsr = new UsersHandler();
-            var userToSign = new User('toupdate@ece.fr', 'Bla', [])
-            dbUsr.signup(userToSign, (err: Error, result: any) => {})
-           .then(()=>{done()})
+
+        db.then(() => {
+            dbUsr.drop((err: Error, result: any)=>{
+                console.log("drop", result);
+
+            }).then(()=>{
+                var userToSign = new User('toupdate@ece.fr', 'Bla', []);
+                dbUsr.signup(userToSign, (err: Error, result: any) => {})
+                .then(()=>{done()});
+            });
+
+        });
             
     });
 
